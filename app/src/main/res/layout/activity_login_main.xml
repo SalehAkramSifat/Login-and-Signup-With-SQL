@@ -22,7 +22,7 @@
         tools:ignore="HardcodedText" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginHorizontal="50dp"
