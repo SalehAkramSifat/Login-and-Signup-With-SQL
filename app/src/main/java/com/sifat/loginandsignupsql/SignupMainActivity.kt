@@ -1,20 +1,48 @@
 package com.sifat.loginandsignupsql
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.sifat.loginandsignupsql.databinding.ActivitySignupMainBinding
 
 class SignupMainActivity : AppCompatActivity() {
+    lateinit var bindind : ActivitySignupMainBinding
+    lateinit var databaseHelper: DatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_signup_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        bindind = ActivitySignupMainBinding.inflate(layoutInflater)
+        setContentView(bindind.root)
+
+        databaseHelper = DatabaseHelper(this)
+
+        bindind.directLogin.setOnClickListener {
+            val intent1 = Intent(this, LoginMainActivity::class.java)
+            startActivity(intent1)
+            finish()
+        }
+
+        bindind.signup.setOnClickListener {
+            val signupUsername = bindind.username.text.toString()
+            val signupPassword = bindind.password.text.toString()
+            signupDatabase(signupUsername, signupPassword)
+        }
+    }
+    private fun signupDatabase(username:String, password:String){
+        val inserdRowId = databaseHelper.insertUser(username, password)
+        if (inserdRowId!= -1L){
+            Toast.makeText(this, "Signup Successful", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, LoginMainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else{
+            Toast.makeText(this, "Signup Failed", Toast.LENGTH_SHORT).show()
         }
     }
 }
